@@ -6,7 +6,7 @@ angular.module('angular-toc', [
 /*global angular */
 
 angular.module('angular-toc')
-.directive('bdToc', [function () {
+.directive('bdToc', ['$timeout', '$compile', function ($timeout, $compile) {
 
     // Item object.
     var Item = function (el) {
@@ -30,8 +30,8 @@ angular.module('angular-toc')
                 this.$el.attr('id', this.slug(title));
 
                 // Prepare the markup
-                var el = '<li>' +
-                            '<a href="#' + this.slug(title) + '">' + title + '</a>' +
+                var el = '<li du-scrollspy="' + this.slug(title) + '">' +
+                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="70">' + title + '</a>' +
                         '</li>';
 
                 // Return the finished element.
@@ -43,20 +43,47 @@ angular.module('angular-toc')
     return {
         // Can only be created as an element: <bd-toc></bd-toc>
         restrict: 'E',
-        link: function (scope, el, attrs) {
-            // Set the selector that will be used, default to .toc-item
-            var selector = attrs.selector || '.toc-item';
+        link: function (scope, elem, attrs) {
+            // Wrapped in a timeout (of 0) to wait for things like ngShow to resolve
+            $timeout(function() {
+                // Set the selector that will be used, default to .toc-item
+                var selector = attrs.selector || '.toc-item';
 
-            // Get the elements based on the selector
-            var els = angular.element(selector);
+                // Get the elements based on the selector
+                var els = document.querySelectorAll(selector);
 
-            // Generate the approriate HTML to start.
-            var $el = el.append('<ul class="bd-toc" />');
+                elem.append('<ul class="nav" />');
 
-            // Loop over the selected elements.
-            angular.forEach(els, function (el){
-                // Append a list item.
-                $el.append(new Item(el).render());
+                // Loop over the selected elements.
+                angular.forEach(els, function (el){
+                    // Append a list item.
+                    if(el.offsetHeight > 0) {
+                        elem.find('ul').append($compile(new Item(el).render())( scope ));
+                    }
+                });
+            });
+
+            // this is hacky, don't always check body
+            scope.$watch(function () {
+               return document.body.innerHTML;
+            }, function() {
+               // Set the selector that will be used, default to .toc-item
+                var selector = attrs.selector || '.toc-item';
+
+                // Get the elements based on the selector
+                var els = document.querySelectorAll(selector);
+
+                elem.html('');
+
+                elem.append('<ul class="nav" />');
+
+                // Loop over the selected elements.
+                angular.forEach(els, function (el){
+                    // Append a list item.
+                    if(el.offsetHeight > 0) {
+                        elem.find('ul').append($compile(new Item(el).render())( scope ));
+                    }
+                });
             });
         }
     };
