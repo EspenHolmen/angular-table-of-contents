@@ -83,6 +83,13 @@ angular.module('angular-toc')
                         }
                     });
                 });
+
+                // Back to top link
+                var b2t =   '<li>' +
+                                '<a href="" bd-toc-scroll-top class="back-to-top">back to top</a>' +
+                            '</li>';
+
+                elem.find('ul').append($compile(b2t)(scope));
             });
 
             // Remove the existing directive because it will be rebuilt later
