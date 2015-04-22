@@ -1,4 +1,3 @@
 /*global angular */
 
-angular.module('angular-toc', [
-]);
+angular.module('angular-toc', ['duScroll']);

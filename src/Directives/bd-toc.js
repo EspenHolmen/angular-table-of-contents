@@ -1,7 +1,7 @@
 /*global angular */
 
 angular.module('angular-toc')
-.directive('bdToc', ['$timeout', '$compile', function ($timeout, $compile) {
+.directive('bdToc', ['$timeout', '$compile', '$rootScope', function ($timeout, $compile, $rootScope) {
 
     // Item object.
     var Item = function (el) {
@@ -26,7 +26,7 @@ angular.module('angular-toc')
 
                 // Prepare the markup
                 var el = '<li du-scrollspy="' + this.slug(title) + '">' +
-                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="70">' + title + '</a>' +
+                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="80">' + title + '</a>' +
                         '</li>';
 
                 // Return the finished element.
@@ -58,30 +58,32 @@ angular.module('angular-toc')
                 });
             });
 
-            // this is hacky, don't always check body
-            scope.$watch(function () {
-               return document.body.innerHTML;
-            }, function() {
-               // Set the selector that will be used, default to .toc-item
-                var selector = attrs.selector || '.toc-item';
-
-                // Get the elements based on the selector
-                var els = document.querySelectorAll(selector);
-
-                elem.html('');
-
-                elem.append('<ul class="nav" />');
-
-                // Loop over the selected elements.
-                angular.forEach(els, function (el){
-                    // Append a list item.
-                    if(el.offsetHeight > 0) {
-                        elem.find('ul').append($compile(new Item(el).render())( scope ));
+            // Update the TOC when the event is broadcast
+            $rootScope.$on('bdTocUpdate', function() {
+                $timeout(function() {
+                    if(!elem) {
+                        return;
                     }
-                });
 
-                // Test
-                $('body').scrollspy('refresh');
+                    // Set the selector that will be used, default to .toc-item
+                    var selector = attrs.selector || '.toc-item';
+
+                    // Get the elements based on the selector
+                    var els = document.querySelectorAll(selector);
+
+                    // Loop over the selected elements.
+                    angular.forEach(els, function (el){
+                        // Append a list item.
+                        if(el.offsetHeight > 0) {
+                            elem.find('ul').append($compile(new Item(el).render())( scope ));
+                        }
+                    });
+                });
+            });
+
+            // Remove the existing directive because it will be rebuilt later
+            scope.$on('$destroy', function() {
+                elem = null;
             });
         }
     };
