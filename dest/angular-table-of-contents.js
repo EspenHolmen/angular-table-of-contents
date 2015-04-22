@@ -30,7 +30,7 @@ angular.module('angular-toc')
 
                 // Prepare the markup
                 var el = '<li du-scrollspy="' + this.slug(title) + '">' +
-                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="80">' + title + '</a>' +
+                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="60">' + title + '</a>' +
                         '</li>';
 
                 // Return the finished element.
