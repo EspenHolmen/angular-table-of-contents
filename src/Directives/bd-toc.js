@@ -78,19 +78,30 @@ angular.module('angular-toc')
                             elem.find('ul').append($compile(new Item(el).render())( scope ));
                         }
                     });
+
+                    // Back to top link
+                    var b2t =   '<li>' +
+                                    '<a href="" bd-toc-scroll-top class="back-to-top">back to top</a>' +
+                                '</li>';
+
+                    elem.find('ul').append($compile(b2t)(scope));
                 });
-
-                // Back to top link
-                var b2t =   '<li>' +
-                                '<a href="" bd-toc-scroll-top class="back-to-top">back to top</a>' +
-                            '</li>';
-
-                elem.find('ul').append($compile(b2t)(scope));
             });
 
             // Remove the existing directive because it will be rebuilt later
             scope.$on('$destroy', function() {
                 elem = null;
+            });
+        }
+    };
+}])
+.directive('bdTocScrollTop', ['$timeout', '$document', function($timeout, $document) {
+    return {
+        restrict: 'AC',
+        link: function (scope, elem) {
+            // Wrapped in a timeout (of 0) to wait for things like ngShow to resolve
+            elem.on('click', function() {
+                $document.scrollTopAnimated(0, 500);
             });
         }
     };
