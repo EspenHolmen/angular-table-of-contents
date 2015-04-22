@@ -79,6 +79,9 @@ angular.module('angular-toc')
                         elem.find('ul').append($compile(new Item(el).render())( scope ));
                     }
                 });
+
+                // Test
+                $('body').scrollspy('refresh');
             });
         }
     };
