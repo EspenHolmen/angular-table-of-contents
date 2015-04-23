@@ -83,12 +83,17 @@ angular.module('angular-toc')
                         }
                     });
 
-                    // Back to top link
-                    var b2t =   '<li>' +
-                                    '<a href="" bd-toc-scroll-top class="back-to-top">back to top</a>' +
-                                '</li>';
+                    // Only add back to top if there are tags present
+                    if(els.length > 0) {
+                        // Back to top link
+                        var b2t = '<li>' +
+                                    '<a href="" bd-toc-scroll-top class="back-to-top">' +
+                                        'back to top <i class="fa fa-chevron-up"></i>' +
+                                    '</a>' +
+                                  '</li>';
 
-                    elem.find('ul').append($compile(b2t)(scope));
+                        elem.find('ul').append($compile(b2t)(scope));
+                    }
                 });
             });
 
