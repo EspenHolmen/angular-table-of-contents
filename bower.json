@@ -5,7 +5,7 @@
     "Bram Devries <bram@madewithlove.be>"
   ],
   "description": "Angular Table of contents: Automatically generate a table of contents",
-  "main": "dest/angular-toc.min.js",
+  "main": "dest/angular-table-of-contents.js",
   "keywords": [
     "Table",
     "of",
