@@ -25,10 +25,15 @@ angular.module('angular-toc')
                 this.$el.attr('id', this.slug(title));
 
                 // Prepare the markup
-                var el = '<li du-scrollspy="' + this.slug(title) + '">' +
-                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="60">' + title + '</a>' +
-                        '</li>';
+                //var el = '<li du-scrollspy="' + this.slug(title) + '">' +
+                 //           '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="60">' + title + '</a>' +
+                 //       '</li>';
 
+				var el = '<li>' +
+							'<a href="#' + $state.$current.url.prefix + '#' + this.slug(title) + '">' + title + '</a>' +
+						'</li>';
+						
+						
                 // Return the finished element.
                 return el;
             }
