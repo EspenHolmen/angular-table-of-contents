@@ -1,11 +1,11 @@
 /*global angular */
 
-angular.module('angular-toc', ['duScroll']);
+angular.module('angular-toc', []);
 
 /*global angular */
 
 angular.module('angular-toc')
-.directive('bdToc', ['$timeout', '$compile', '$rootScope', function ($timeout, $compile, $rootScope) {
+.directive('bdToc', function ($timeout, $compile, $rootScope, $state) {
 
     // Item object.
     var Item = function (el) {
@@ -29,9 +29,14 @@ angular.module('angular-toc')
                 this.$el.attr('id', this.slug(title));
 
                 // Prepare the markup
-                var el = '<li du-scrollspy="' + this.slug(title) + '">' +
-                            '<a href="#' + this.slug(title) + '" du-smooth-scroll offset="60">' + title + '</a>' +
+                /*var el = '<li du-scrollspy="' + this.slug(title) + '">' +
+                            '<a href="#' + this.slug(title) + '" offset="60">' + title + '</a>' +
                         '</li>';
+*/
+
+                var el = '<li>' +
+                    '<a href="#' + $state.$current.url.prefix + '#' + this.slug(title) + '">' + title + '</a>' +
+                    '</li>';
 
                 // Return the finished element.
                 return el;
@@ -51,7 +56,7 @@ angular.module('angular-toc')
                 // Get the elements based on the selector
                 var els = document.querySelectorAll(selector);
 
-                elem.append('<ul class="nav" />');
+                elem.append('<ul class="" />');
 
                 // Loop over the selected elements.
                 angular.forEach(els, function (el){
@@ -103,15 +108,4 @@ angular.module('angular-toc')
             });
         }
     };
-}])
-.directive('bdTocScrollTop', ['$timeout', '$document', function($timeout, $document) {
-    return {
-        restrict: 'AC',
-        link: function (scope, elem) {
-            // Wrapped in a timeout (of 0) to wait for things like ngShow to resolve
-            elem.on('click', function() {
-                $document.scrollTopAnimated(0, 500);
-            });
-        }
-    };
-}]);
+});
